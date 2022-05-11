@@ -16,10 +16,105 @@ Big_int& Big_int::operator= (std::string str) {
 	return (*this);
 }
 
+bool Big_int::operator==(Big_int right)
+{
+	if (num[num.size() - 1] == 0)
+	{
+		delete_null(*this);
+	}
+	if (right[right.size() - 1] == 0)
+	{
+		delete_null(right);
+	}
+	if (num.size() != right.size())
+	{
+		return false;
+	}
+	else
+	{
+		for (size_t i = 0; i < num.size(); i++)
+		{
+			if (num[i] != right[i])
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+bool Big_int::operator!=(Big_int right)
+{
+	return !((*this) == right);
+}
+
+bool Big_int::operator<(Big_int right)
+{
+	if (num[num.size() - 1] == 0)
+	{
+		delete_null(*this);
+	}
+	if (right[right.size() - 1] == 0)
+	{
+		delete_null(right);
+	}
+	if (num.size() > right.size())
+	{
+		return false;
+	}
+	else if (num.size() == right.size())
+	{
+		for (int i = num.size() - 1; i >= 0; i--)
+		{
+			if (num[i] != right[i])
+			{
+				if (num[i] > right[i])
+				{
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+
+			}
+		}
+		return false;
+	}
+	return true;
+}
+
+bool Big_int::operator>(Big_int right)
+{
+	if (!((*this) < right) && !((*this) == right))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Big_int::operator<=(Big_int right)
+{
+	if (((*this) < right) || ((*this) == right))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Big_int::operator>=(Big_int right)
+{
+	if (((*this) > right) || ((*this) == right))
+	{
+		return true;
+	}
+	return false;
+}
 
 unsigned short& Big_int::operator[](size_t index) {
 	return num[index];
 }
+
 void Big_int::push_back(unsigned short a) {
 	num.push_back(a);
 }
@@ -43,10 +138,28 @@ void zerkalo(Big_int& a)
 
 void delete_null(Big_int& a) {
 	long long length = a.size();
-	while (a[length - 1] == 0)
+	bool flag = 0;
+	for (int i = 0; i < length; i++)
 	{
-		a.pop_back();
-	    --length;
+		if (a[i] != 0)
+		{
+			flag = 1;
+			break;
+		}
+	}
+	if (!flag)
+	{
+		while (a.size() != 1)
+		{
+			a.pop_back();
+		}
+	}
+	if (flag) {
+		while (a[length - 1] == 0)
+		{
+			a.pop_back();
+		    --length;
+		}
 	}
 }
 
@@ -56,30 +169,42 @@ char less_for_big_int(Big_int a, Big_int b, bool del) {
 		zerkalo(b);
 	}
 	char k = ' '; // если к == ' ', значит числа одинаковой длины
+	delete_null(a);
+	delete_null(b);
 	unsigned long long length = a.size();
 	if (a.size() > b.size())
 	{
 		length = a.size();
-		k = 'a'; // если к == 1, значит первое число длиннее второго
+		k = 'a';// если к == 1, значит первое число длиннее второго
+		return k;
 	}
 	else if (b.size() > a.size())
 	{
 		length = b.size();
 		k = 'b'; // если к == 2, значит второе число длиннее первого
+		return k;
 	}
 	// если числа одинаковой длины, то необходимо сравнить их веса
 	else
 	{
-		// если разряд первого числа больше, значит первое число больше второго
-		if (a[length - 1] > b[length - 1]) { k = 'a'; }
-		// если разряд второго числа больше, значит второе число больше первого
-		if (b[length - 1] > a[length - 1])
-		{
-			k = 'b';
+		for (int i = length - 1; i >= 0; i--) {
+			// если разряд первого числа больше, значит первое число больше второго
+			if (a[i] > b[i]) { k = 'a'; return k; }
+			// если разряд второго числа больше, значит второе число больше первого
+			if (b[i] > a[i])
+			{
+				k = 'b';
+				return k;
+			}
 		}
+	}
+	if (k == ' ')
+	{
+		k = 'a';
 	}
 	return k;
 }
+
 Big_int summa(Big_int a, Big_int b) {
 	unsigned long long length = 0;
 	// определяем длину массива суммы
@@ -197,6 +322,15 @@ Big_int multiplication(Big_int a, Big_int b) {
 	return c;
 }
 
+Big_int pow(Big_int a, Big_int pow) {
+	Big_int res, i;
+	res = "1";
+	
+	for (Big_int i({ 0 }); i < pow; i = summa(i, to_big(1))) {
+		res = multiplication(res, a);
+	}
+	return res;
+}
 Big_int reduce_big_int(Big_int minuend, Big_int subtrahend) {
 	for (size_t cur_pos = 0; cur_pos < subtrahend.size(); cur_pos++)
 	{
@@ -308,7 +442,6 @@ void Big_int::print() {
 	{
 		std::cout << num[i];
 	}
-	std::cout << std::endl;
 }
 
 Big_int mod(Big_int a, Big_int b) {
@@ -344,3 +477,27 @@ Big_int mod(Big_int a, Big_int b) {
 	return minuend;
 }
 
+Big_int power_mod(const Big_int a, Big_int power, const Big_int MOD) {
+	if (power == to_big(0)) return to_big(1);
+	if (mod(power, to_big(2)) == to_big(1)) return mod((multiplication(a, power_mod(a, difference(power, to_big(1)), MOD))), MOD);
+	Big_int tmp;
+	tmp = power_mod(a, div_big_int(power, to_big(2)), MOD);
+	return mod(multiplication(tmp, tmp), MOD);
+}
+
+
+Big_int to_big(long long a) {
+	Big_int big_a;
+	big_a = std::to_string(a);
+	return big_a;
+}
+
+Big_int random(Big_int a) {
+	Big_int res;
+	res = a;
+	for (size_t i = 0; i < res.size(); i++) {
+		res[i] = rand() % 10;
+	}
+	delete_null(res);
+	return res;
+}
