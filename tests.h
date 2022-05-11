@@ -1,6 +1,6 @@
 #include <vector>
 #include "big_int.h"
 
-std::vector <Big_int> fact(Big_int m);
+std::vector <big_integer> fact(big_integer m);
 
-void test_Luka(Big_int n);
+void test_Luka(big_integer n);
