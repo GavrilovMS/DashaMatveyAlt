@@ -1,3 +1,6 @@
+#include "tests.h"
+
+
 int main() {
 	
 	Big_int a;
