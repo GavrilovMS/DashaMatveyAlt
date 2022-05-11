@@ -1,50 +1,53 @@
 #include "tests.h"
+#include <iostream>
 
-
-std::vector <Big_int> fact(Big_int m)
+std::vector <big_integer> fact(big_integer m)
 {
-	std::vector <Big_int> fact_m;
+	std::vector <big_integer> fact_m;
 	
-	for (Big_int q({ 2 }); multiplication(q, q) <= m; q = summa(to_big(1), q)) {
-		if (mod(m, q) == to_big(0)) {
+	for (big_integer q = 2; q*q <= m; q++) {
+		if (m % q == 0) {
 			fact_m.push_back(q);
 
-			while (mod(m, q) == to_big(0)) {
-				m = div_big_int(m, q);
+			while (m % q == 0) {
+				m /= q;
 			}
 		}
 
 	}
-	if ((m > to_big(1))) {
+	if (m > 1) {
 		fact_m.push_back(m);
 	}
 	return fact_m;
 }
 
-void test_Luka(Big_int n) {
-	 std::vector <Big_int> fact_m;
-	 Big_int m;
-	 m = difference(n, to_big(1));
+void test_Luka(big_integer n) {
+	 std::vector <big_integer> fact_m;
+	 big_integer m;
+	 m = n - 1;
 	 fact_m = fact(m);
 	 bool is_prime = false;
-	 for (int i = 0; i < 100; i++) {
-		 Big_int a;
+	 for (int i = 0; i < 10; i++) {
+		 big_integer a;
 		 a = random(m);
-		 if (power_mod(a, m, n) == to_big(1)) {
+		 if (power_mod(a, m, n) == 1) {
 			 for (int i = 0; i < fact_m.size(); i++) {
-				 if (power_mod(a, div_big_int(m, fact_m[i]), n) != to_big(1)) {
+				 if (power_mod(a, m/fact_m[i], n) != 1) {
 					 is_prime = true;
 					 break;
 				 }
 				 
 			 }
 		 }
+		 else {
+			 break;
+		 }
 	 }
-	 n.print();
+	
 	 if (is_prime) {
-		 std::cout << " is prime" << std::endl;
+		 std::cout << n << " is prime" << std::endl;
 	 }
 	 else {
-		 std::cout << " is not prime" << std::endl;;
+		 std::cout << n << " is not prime" << std::endl;;
 	 }
 }
