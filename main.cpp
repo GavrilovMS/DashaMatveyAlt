@@ -3,8 +3,8 @@
 
 int main() {
 	
-	Big_int a;
-	a = "19175002942688032928599";
+	big_integer a("1125899839733759");
+
 	test_Luka(a);
 
 	return 0;
