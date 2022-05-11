@@ -1,39 +1,68 @@
 #include <vector>
-#include <iostream>
 #include <string>
+#include <ostream>
+#include <iomanip>
+#include <sstream>
 
-class Big_int {
-private:
-	std::vector <unsigned short> num;
+class big_integer {
+    // основание системы счисления (1 000 000 000)
+    static const int BASE = 1000000000;
+
+    // внутреннее хранилище числа
+    std::vector<int> _digits;
+
+    // знак числа
+    bool _is_negative;
+
+    void _remove_leading_zeros();
+    void _shift_right();
+
 public:
-	
-	Big_int(std::vector<unsigned short> number = { 0 });
-	
-	Big_int& operator = (std::string str);
-	bool operator==(Big_int right);
-	bool operator!=(Big_int right);
-	bool operator<(Big_int right);
-	bool operator>(Big_int right);
-	bool operator<=(Big_int right);
-	bool operator>=(Big_int right);
-	unsigned short& operator[](size_t index);
-	void push_back(unsigned short a);
-	void pop_back();
-	size_t size();
-	void print();
+    // класс-исключение, бросаемое при делении на ноль
+    class divide_by_zero : public std::exception {  };
+
+    big_integer();
+    big_integer(std::string);
+    big_integer(signed char);
+    big_integer(unsigned char);
+    big_integer(signed short);
+    big_integer(unsigned short);
+    big_integer(signed int);
+    big_integer(unsigned int);
+    big_integer(signed long);
+    big_integer(unsigned long);
+    big_integer(signed long long);
+    big_integer(unsigned long long);
+
+    friend std::ostream& operator <<(std::ostream&, const big_integer&);
+    operator std::string() const;
+    const big_integer operator +() const;
+    const big_integer operator -() const;
+    const big_integer operator ++();
+    const big_integer operator ++(int);
+    const big_integer operator --();
+    const big_integer operator --(int);
+    friend bool operator ==(const big_integer&, const big_integer&);
+    friend bool operator <(const big_integer&, const big_integer&);
+    friend bool operator !=(const big_integer&, const big_integer&);
+    friend bool operator <=(const big_integer&, const big_integer&);
+    friend bool operator >(const big_integer&, const big_integer&);
+    friend bool operator >=(const big_integer&, const big_integer&);
+    friend const big_integer operator +(big_integer, const big_integer&);
+    big_integer& operator +=(const big_integer&);
+    friend const big_integer operator -(big_integer, const big_integer&);
+    big_integer& operator -=(const big_integer&);
+    friend const big_integer operator *(const big_integer&, const big_integer&);
+    big_integer& operator *=(const big_integer&);
+    friend const big_integer operator /(const big_integer&, const big_integer&);
+    big_integer& operator /=(const big_integer&);
+    friend const big_integer operator %(const big_integer&, const big_integer&);
+    big_integer& operator %=(const big_integer&);
+
+    bool odd() const;
+    bool even() const;
+    const big_integer pow(big_integer) const;
 };
 
-void zerkalo(Big_int& a);
-void delete_null(Big_int& a);
-char less_for_big_int(Big_int a, Big_int b, bool del);
-Big_int summa(Big_int a, Big_int b);
-Big_int difference(Big_int a, Big_int b);
-Big_int multiplication(Big_int a, Big_int b);
-Big_int pow(Big_int a, Big_int pow);
-Big_int reduce_big_int(Big_int minuend, Big_int subtrahend);
-Big_int inc_big_int(Big_int a);
-Big_int div_big_int(Big_int a, Big_int b);
-Big_int mod(Big_int a, Big_int b);
-Big_int power_mod(Big_int a, Big_int power, Big_int MOD);
-Big_int to_big(long long a);
-Big_int random(Big_int a);
+big_integer random(big_integer a);
+big_integer  power_mod(big_integer  a, big_integer  power, big_integer MOD);
