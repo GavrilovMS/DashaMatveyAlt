@@ -119,6 +119,7 @@ void T_Diemitko(big_integer q, big_integer left_edge, big_integer right_edge) {
 		if (d == 1) {
 			if (n > right_edge) return;
 			if (n > left_edge) std::cout << n << " is prime" << std::endl;
+			if (_kbhit()) return;
 
 			T_Diemitko(n, left_edge, right_edge);
 
