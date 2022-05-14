@@ -11,8 +11,6 @@ class big_integer {
     // внутреннее хранилище числа
     std::vector<int> _digits;
 
-    // знак числа
-    bool _is_negative;
 
     void _remove_leading_zeros();
     void _shift_right();
@@ -23,21 +21,21 @@ public:
 
     big_integer();
     big_integer(std::string);
-    big_integer(signed char);
-    big_integer(unsigned char);
-    big_integer(signed short);
-    big_integer(unsigned short);
-    big_integer(signed int);
-    big_integer(unsigned int);
-    big_integer(signed long);
-    big_integer(unsigned long);
-    big_integer(signed long long);
-    big_integer(unsigned long long);
+
+    big_integer(char);
+
+    big_integer(short);
+
+    big_integer(int);
+
+    big_integer(long);
+
+    big_integer(long long);
 
     friend std::ostream& operator <<(std::ostream&, const big_integer&);
     operator std::string() const;
     const big_integer operator +() const;
-    const big_integer operator -() const;
+
     const big_integer operator ++();
     const big_integer operator ++(int);
     const big_integer operator --();
