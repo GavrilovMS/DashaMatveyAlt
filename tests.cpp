@@ -127,56 +127,7 @@ void T_Diemitko(big_integer q, big_integer left_edge, big_integer right_edge) {
 	}
 }
 
-std::vector <big_integer> q_all = { 2,3,5,7,11,13,17,19,23,29,31,37,41 };
 
-void T_Poklingtona() {
-	big_integer F(1);
-	std::vector<big_integer> fact_m;
-
-	int count_q = 1 + rand() % 2;
-	for (int i = 0; i < count_q; i++) {
-		big_integer q;
-		q = q_all[rand() % q_all.size()];
-
-		fact_m.push_back(q);
-
-		big_integer a;
-		a = 2 + rand() % 2;
-
-		F *= q.pow(a);
-	}
-
-	big_integer R;
-	R = random(F / 2);
-	if (R % 2 != 0) R -= 1;
-
-	big_integer n;
-	n = F * R + 1;
-
-	char is_prime = 2;
-	for (int i = 0; i < 10; i++) {
-		big_integer a;
-		a = random(n - 1);
-
-		if (power_mod(a, n - 1, n) == 1) {
-
-			for (int i = 0; i < fact_m.size(); i++) {
-				if (NOD(n, a.pow((n - 1) / fact_m[i]) - 1) == 1) {
-
-					is_prime = 1;
-				}
-				else {
-					is_prime = 2;
-					break;
-				}
-			}
-		}
-		if (is_prime == 1) break;
-	}
-	if (is_prime == 1) {
-		std::cout << n << " Wow!" << std::endl;
-	}
-}
 
 void T_Luka_Lemera(big_integer n) {
 	big_integer M("2");
