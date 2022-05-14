@@ -4,8 +4,8 @@
 std::vector <big_integer> fact(big_integer m)
 {
 	std::vector <big_integer> fact_m;
-	
-	for (big_integer q = 2; q*q <= m; q++) {
+
+	for (big_integer q = 2; q * q <= m; q++) {
 		if (m % q == 0) {
 			fact_m.push_back(q);
 
@@ -34,40 +34,81 @@ char test_Luka(big_integer n, const std::vector <big_integer>& fact_m) {
 		return 0;
 	}
 
-	 
-	 big_integer m;
-	 m = n - 1;
-	 
-	 char is_prime = 2;
-	 
-	 for (int i = 0; i < 10; i++) {
-		 big_integer a;
-		 a = random(m);
-		 if (power_mod(a, m, n) == 1) {
-			 for (int i = 0; i < fact_m.size(); i++) {
-				 if (power_mod(a, m/fact_m[i], n) != 1) {
-					 is_prime = 1;
-					 
-				 }
-				 else {
-					 is_prime = 3;
-					 break;
-				 }
-				 
-			 }
-		 }
-		 
-		 if (is_prime != 3) break;
 
-	 } 
-	 return is_prime;
-	
-	
+	big_integer m;
+	m = n - 1;
+
+	char is_prime = 2;
+
+	for (int i = 0; i < 10; i++) {
+		big_integer a;
+		a = random(m);
+		if (power_mod(a, m, n) == 1) {
+			for (int i = 0; i < fact_m.size(); i++) {
+				if (power_mod(a, m / fact_m[i], n) != 1) {
+					is_prime = 1;
+
+				}
+				else {
+					is_prime = 3;
+					break;
+				}
+
+			}
+		}
+
+		if (is_prime != 3) break;
+
+	}
+	return is_prime;
+
+
+}
+
+char test_Luka(big_integer n) {
+
+	if (n % 2 == 0) {
+		return 0;
+	} //если число четное, то оно точно не простое
+	std::vector<big_integer> fact_m;
+	big_integer m;
+	m = n - 1;
+	fact_m = fact(m);//здесь хранятся все делители числа n-1
+	char is_prime = 0;//переменная, отвечающая за результат
+	//0 - число составное
+	//1 - число простое
+	//3 - число возможно составное
+	for (int i = 0; i < 10; i++) {
+		big_integer a;
+		a = random(m);//функция рандом генерирует рандомное число а в диапозоне(1,n)
+		if (power_mod(a, m, n) == 1) {
+			for (int i = 0; i < fact_m.size(); i++) {
+				if (power_mod(a, m / fact_m[i], n) != 1) {
+					is_prime = 1;
+
+				}
+				else {
+					is_prime = 3;
+					break;
+					//если какой-то делитель не прошел проверку на второе
+					//условие, то мы переходим к следующей а
+				}
+
+			}
+		}
+
+		if (is_prime != 3) break;
+		//если нашлось такое а, что все проверки прошли успешно и мы точно можем сказать, что
+		//число n-простое, то проверять остальные а не имеет смысла
+	}
+	return is_prime;
+
+
 }
 
 
-void T_Diemitko(big_integer q) {
-	
+void T_Diemitko(big_integer q, big_integer left_edge, big_integer right_edge) {
+
 	for (big_integer R = 2; R < 4 * (q + 1); R += 2) {
 		big_integer n;
 		std::vector<big_integer> fact_m;
@@ -76,10 +117,11 @@ void T_Diemitko(big_integer q) {
 		n = q * R + 1;
 		char d = test_Luka(n, fact_m);
 		if (d == 1) {
-			if (n > 10000000000) std::cout << n << " Wow!" << std::endl;
-			if (n > 1000000000000000) return;
-			T_Diemitko(n);
-			
+			if (n > right_edge) return;
+			if (n > left_edge) std::cout << n << " is prime" << std::endl;
+
+			T_Diemitko(n, left_edge, right_edge);
+
 		}
 
 	}
@@ -91,16 +133,16 @@ void T_Poklingtona() {
 	big_integer F(1);
 	std::vector<big_integer> fact_m;
 
-	int count_q = 1+rand() % 2;
+	int count_q = 1 + rand() % 2;
 	for (int i = 0; i < count_q; i++) {
 		big_integer q;
 		q = q_all[rand() % q_all.size()];
-		
+
 		fact_m.push_back(q);
 
 		big_integer a;
 		a = 2 + rand() % 2;
-		
+
 		F *= q.pow(a);
 	}
 
@@ -110,28 +152,51 @@ void T_Poklingtona() {
 
 	big_integer n;
 	n = F * R + 1;
-	
+
 	char is_prime = 2;
 	for (int i = 0; i < 10; i++) {
 		big_integer a;
 		a = random(n - 1);
 
-		if (power_mod(a, n-1, n) == 1) {
+		if (power_mod(a, n - 1, n) == 1) {
 
 			for (int i = 0; i < fact_m.size(); i++) {
-					if (NOD(n, a.pow((n - 1) / fact_m[i]) - 1) == 1) {
+				if (NOD(n, a.pow((n - 1) / fact_m[i]) - 1) == 1) {
 
-						is_prime = 1;
-					}
-					else {
-						is_prime = 2;
-						break;
-					}
+					is_prime = 1;
+				}
+				else {
+					is_prime = 2;
+					break;
+				}
 			}
 		}
 		if (is_prime == 1) break;
 	}
 	if (is_prime == 1) {
 		std::cout << n << " Wow!" << std::endl;
+	}
+}
+
+void T_Luka_Lemera(big_integer n) {
+	big_integer M("2");
+	M = M.pow(n) - 1;
+	//проверяем простоту числа n тестом Люка
+	if (test_Luka(n) != 1)
+	{
+		//std::cout << M << " is not prime" << std::endl;
+		return;
+	}
+	big_integer U("4");
+	for (big_integer k = 1; k <= n - 2; k++) {
+		U = power_mod((U.pow(2) - 2), 1, M);
+	}
+	if (U == 0)
+	{
+		std::cout << M << " is prime" << std::endl;
+	}
+	else
+	{
+		//std::cout << M << " is not prime" << std::endl;
 	}
 }
