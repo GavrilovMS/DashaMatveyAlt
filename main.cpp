@@ -17,9 +17,9 @@ int main() {
 	setlocale(0,"");
 	bool is_working = true;
 	while (is_working) {
-		std::cout << "1. Проверить простоту по критерию Люка" << std::endl;
+		std::cout << "1. Проверить число на простоту по критерию Люка" << std::endl;
 		std::cout << "2. Сгенерировать простые числа в заданном диапазоне (теорема Диемитко)" << std::endl;
-		std::cout << "3. Показать числа Мерсена" << std::endl;
+		std::cout << "3. Показать числа Мерсенна" << std::endl;
 		std::cout << "Ввведите номер задачи:" << std::endl;
 		int num;
 		std::cin >> num;
