@@ -43,21 +43,23 @@ char test_Luka(big_integer n, const std::vector <big_integer>& fact_m) {
 	for (int i = 0; i < 10; i++) {
 		big_integer a;
 		a = random(m);
-		if (power_mod(a, m, n) == 1) {
-			for (int i = 0; i < fact_m.size(); i++) {
-				if (power_mod(a, m / fact_m[i], n) != 1) {
-					is_prime = 1;
+		if (NOD(a, n) == 1) {
+			if (power_mod(a, m, n) == 1) {
+				for (int i = 0; i < fact_m.size(); i++) {
+					if (power_mod(a, m / fact_m[i], n) != 1) {
+						is_prime = 1;
+
+					}
+					else {
+						is_prime = 3;
+						break;
+					}
 
 				}
-				else {
-					is_prime = 3;
-					break;
-				}
-
 			}
-		}
 
-		if (is_prime != 3) break;
+			if (is_prime != 3) break;
+		}
 
 	}
 	return is_prime;
@@ -81,19 +83,21 @@ char test_Luka(big_integer n) {
 	for (int i = 0; i < 10; i++) {
 		big_integer a;
 		a = random(m);//функция рандом генерирует рандомное число а в диапозоне(1,n)
-		if (power_mod(a, m, n) == 1) {
-			for (int i = 0; i < fact_m.size(); i++) {
-				if (power_mod(a, m / fact_m[i], n) != 1) {
-					is_prime = 1;
+		if (NOD(a, n) == 1) {
+			if (power_mod(a, m, n) == 1) {
+				for (int i = 0; i < fact_m.size(); i++) {
+					if (power_mod(a, m / fact_m[i], n) != 1) {
+						is_prime = 1;
+
+					}
+					else {
+						is_prime = 3;
+						break;
+						//если какой-то делитель не прошел проверку на второе
+						//условие, то мы переходим к следующей а
+					}
 
 				}
-				else {
-					is_prime = 3;
-					break;
-					//если какой-то делитель не прошел проверку на второе
-					//условие, то мы переходим к следующей а
-				}
-
 			}
 		}
 
@@ -120,7 +124,6 @@ void T_Diemitko(big_integer q, big_integer left_edge, big_integer right_edge) {
 			if (n > right_edge) return;
 			if (n > left_edge) std::cout << n << " is prime" << std::endl;
 			if (_kbhit()) return;
-
 			T_Diemitko(n, left_edge, right_edge);
 
 		}
